@@ -115,7 +115,7 @@ Author(s): Pascal Eckmann
     [...]
     # By default this script does nothing.
     
-    echo "nameserver 10.66.0.1" >> /etc/resolv.conf
+    echo "nameserver 250.154.200.108" >> /etc/resolv.conf
     dpkg -i /usr/local/libtalloc2.deb
     dpkg -i /usr/local/libwbclient0.deb
     dpkg -i /usr/local/samba-common.deb
@@ -190,6 +190,3 @@ Author(s): Pascal Eckmann
     ├── armbian.tar
     └── ...
     ```
-
-
-

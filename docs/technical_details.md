@@ -195,7 +195,7 @@ Of course, you can also ignore the existing code base and create your own FLUFFI
 
 FLUFFI expects the following services:
 
-- 10.66.0.1: dns server
+- 250.154.200.108: dns server
 - apt.fluffi: An UBUNTU package cache
 - ftp.fluffi: FLUFFI's FTP server
 - smb.fluffi: FLUFFI's SMB server

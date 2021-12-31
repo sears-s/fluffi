@@ -129,7 +129,7 @@ Please note that the FLUFFI binaries must be uploaded to the ftp server in order
 
 ## Setting up the FUN
 The FLUFFI Utility Network (FUN) contains all the infrastructure needed for fuzzing. 
-It is governed by a master server with the static network internal IP address 10.66.0.1 and runs all the basic networking services in containers.
+It is governed by a master server with the static network internal IP address 250.154.200.108 and runs all the basic networking services in containers.
 Before continuing, make sure you have run the necessary steps listed under [Common Steps](#common-steps) on the machine that will be your master.
 
 ### Virtual Network Configuration
@@ -151,9 +151,9 @@ sudo cat > /etc/systemd/network/fluffi.network <<EOF
 [Match]
 Name=ens38
 [Network]
-Address=10.66.0.1/23
+Address=250.154.200.108/23
 Domains=fluffi
-DNS=10.66.0.1
+DNS=250.154.200.108
 EOF
 
 # this step is only needed on ubuntu desktop installations, since

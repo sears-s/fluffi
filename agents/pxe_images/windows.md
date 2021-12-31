@@ -66,7 +66,7 @@ Author(s): Pascal Eckmann
 		wpeinit
         Wpeutil initializenetwork
         Wpeutil WaitForNetwork
-		net use Y: \\10.66.0.1\install\[windows] /user:nobody pass
+		net use Y: \\250.154.200.108\install\[windows] /user:nobody pass
 		Y:
 		setup.exe /Unattend:Y:\unattend.xml
 		```
@@ -82,7 +82,7 @@ Author(s): Pascal Eckmann
         ```
         <FirstLogonCommands>
             <SynchronousCommand wcm:action="add">
-                <CommandLine>cmd.exe /c net use y: \\10.66.0.1\install\initial /user:nobody pass</CommandLine>
+                <CommandLine>cmd.exe /c net use y: \\250.154.200.108\install\initial /user:nobody pass</CommandLine>
                 <Order>1</Order>
                 <Description>Mount Share</Description>
             </SynchronousCommand>
