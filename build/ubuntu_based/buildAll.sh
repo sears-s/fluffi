@@ -68,7 +68,8 @@ USERID=$(id $USER -u)
 GROUPID=$(id $GROUP -g)
 
 # Building FLUFFI C
-for ARCH in "Intel80386" "x86-64" "ARM" "ARMaarch64"; do
+# for ARCH in "Intel80386" "x86-64" "ARM" "ARMaarch64"; do
+for ARCH in "x86-64"; do
 	docker run --rm -e FLUFFI_DEPS="$WITH_DEPS" --user $USERID:$GROUPID -v $(pwd)/../../core:/fluffi -v $(pwd)/build.sh:/build.sh fluffi${ARCH,,} /build.sh
 	STAT=$?
 	if [ $STAT != 0 ]
@@ -97,22 +98,22 @@ then
 fi
 
 
-if [[ -d "../../core/Intel80386/bin" ]] ; then
-	cp ../../core/CaRRoT/CaRRoT-386 ../../core/Intel80386/bin/CaRRoT
-	cp ../../core/Oedipus/Oedipus-386 ../../core/Intel80386/bin/Oedipus
-fi
+# if [[ -d "../../core/Intel80386/bin" ]] ; then
+# 	cp ../../core/CaRRoT/CaRRoT-386 ../../core/Intel80386/bin/CaRRoT
+# 	cp ../../core/Oedipus/Oedipus-386 ../../core/Intel80386/bin/Oedipus
+# fi
 if [[ -d "../../core/x86-64/bin" ]] ; then
 	cp ../../core/CaRRoT/CaRRoT-amd64 ../../core/x86-64/bin/CaRRoT
 	cp ../../core/Oedipus/Oedipus-amd64 ../../core/x86-64/bin/Oedipus
 fi
-if [[ -d "../../core/ARM/bin" ]] ; then
-	cp ../../core/CaRRoT/CaRRoT-arm ../../core/ARM/bin/CaRRoT
-	cp ../../core/Oedipus/Oedipus-arm ../../core/ARM/bin/Oedipus
-fi
-if [[ -d "../../core/ARMaarch64/bin" ]] ; then
-	cp ../../core/CaRRoT/CaRRoT-arm64 ../../core/ARMaarch64/bin/Oedipus
-	cp ../../core/Oedipus/Oedipus-arm64 ../../core/ARMaarch64/bin/CaRRoT
-fi
+# if [[ -d "../../core/ARM/bin" ]] ; then
+# 	cp ../../core/CaRRoT/CaRRoT-arm ../../core/ARM/bin/CaRRoT
+# 	cp ../../core/Oedipus/Oedipus-arm ../../core/ARM/bin/Oedipus
+# fi
+# if [[ -d "../../core/ARMaarch64/bin" ]] ; then
+# 	cp ../../core/CaRRoT/CaRRoT-arm64 ../../core/ARMaarch64/bin/Oedipus
+# 	cp ../../core/Oedipus/Oedipus-arm64 ../../core/ARMaarch64/bin/CaRRoT
+# fi
 
 if [ "$DEPLOY_TO_FTP" = TRUE ] ; then
 	echo "Deploying FLUFFI to ftp.fluffi"
@@ -124,4 +125,3 @@ if [ "$DEPLOY_TO_FTP" = TRUE ] ; then
 		exit $STAT
 	fi
 fi
-

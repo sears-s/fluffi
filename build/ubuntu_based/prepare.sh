@@ -47,24 +47,24 @@ done
 
 
 # Installing qemu binfmt so that we can run arm dockerfiles
-apt-get install -y --no-install-recommends qemu-user-static binfmt-support
-update-binfmts --enable qemu-arm
+# apt-get install -y --no-install-recommends qemu-user-static binfmt-support
+# update-binfmts --enable qemu-arm
 
-cp $(which qemu-arm-static) .
-cp $(which qemu-aarch64-static) .
+# cp $(which qemu-arm-static) .
+# cp $(which qemu-aarch64-static) .
 
-(
-	docker build $DOPTS -t fluffiintel80386 -f intel80386/Dockerfile .
-)&
+# (
+# 	docker build $DOPTS -t fluffiintel80386 -f intel80386/Dockerfile .
+# )&
 (
 	docker build $DOPTS -t fluffix86-64 -f x86-64/Dockerfile .
 )&
-(
-	docker build $DOPTS -t fluffiarm -f arm/Dockerfile .
-)&
-(
-	docker build $DOPTS -t fluffiarmaarch64 -f armaarch64/Dockerfile .
-)&
+# (
+# 	docker build $DOPTS -t fluffiarm -f arm/Dockerfile .
+# )&
+# (
+# 	docker build $DOPTS -t fluffiarmaarch64 -f armaarch64/Dockerfile .
+# )&
 (
 	docker build $DOPTS -t flufficarrot -f carrot/Dockerfile .
 )&
