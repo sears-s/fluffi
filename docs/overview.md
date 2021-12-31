@@ -28,7 +28,7 @@ FLUFFI is a distributed system. Within this system, so-called agents (e.g., Test
 
 The agents are coordinated by a GlobalManager running on a central server. A DHCP/DNS server, a solution to deploy software to executor machines (consisting of a polemarch installation, an ftp and an smb server), a monitoring solution, and some helper services all run on the same central server.
 
-FLUFFI is supposed to be set up in its own subnet with the central server having the static IP address 10.66.0.1.
+FLUFFI is supposed to be set up in its own subnet with the central server having the static IP address 250.154.54.178.
 
 This repository contains 
 - the code of the distributed system ([here](core))

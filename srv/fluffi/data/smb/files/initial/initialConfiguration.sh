@@ -93,7 +93,7 @@ if [[ $hostname == *"lemming"* ]]; then
 
     rm -f /etc/resolv.conf
     echo "search fluffi" > /etc/resolv.conf
-    echo "nameserver 10.66.0.1" >> /etc/resolv.conf
+    echo "nameserver 250.154.54.178" >> /etc/resolv.conf
     DEBIAN_FRONTEND=noninteractive apt-get install -yq network-manager
     sed -i ':a;N;$!ba;s/\[main\]\n/[main]\ndns=default\n/g' /etc/NetworkManager/NetworkManager.conf
     systemctl restart network-manager
@@ -134,7 +134,7 @@ else
 
     rm -f /etc/resolv.conf
     echo "search fluffi" > /etc/resolv.conf
-    echo "nameserver 10.66.0.1" >> /etc/resolv.conf
+    echo "nameserver 250.154.54.178" >> /etc/resolv.conf
     mv /etc/network/interfaces /etc/network/interfaces.unused
     DEBIAN_FRONTEND=noninteractive apt-get install -yq network-manager
     sed -i ':a;N;$!ba;s/\[main\]\n/[main]\ndns=default\n/g' /etc/NetworkManager/NetworkManager.conf
