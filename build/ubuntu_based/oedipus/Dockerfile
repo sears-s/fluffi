@@ -28,7 +28,7 @@ RUN apt-get update -y
 RUN apt-get upgrade -y
 RUN apt-get dist-upgrade -y
 
-RUN adduser --system --uid 1000 --shell /bin/bash --gecos 'fluffi builder' --group --disabled-password --home /home/builder builder
+RUN adduser --system --uid 1001 --shell /bin/bash --gecos 'fluffi builder' --group --disabled-password --home /home/builder builder
 
 RUN apt-get install -yq wget build-essential git
 
