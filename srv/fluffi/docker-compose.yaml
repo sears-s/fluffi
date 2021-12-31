@@ -53,7 +53,7 @@ services:
             - SYS_NICE
             - SYS_RESOURCE
             - SYS_TIME
-        dns: 10.66.0.1
+        dns: 250.154.202.36
     ftp:
         build: ./ftp
         restart: always
@@ -67,7 +67,7 @@ services:
         ports:
             - 20-21:20-21
             - 65500-65515:65500-65515
-        dns: 10.66.0.1
+        dns: 250.154.202.36
     smb:
         build: ./smb
         restart: always
@@ -81,7 +81,7 @@ services:
             - 138:138/udp
             - 139:139/tcp
             - 445:445/tcp
-        dns: 10.66.0.1
+        dns: 250.154.202.36
     mon:
         build: ./mon
         restart: always
@@ -102,7 +102,7 @@ services:
             - ./data/mon/FLUFFIdata.yaml:/usr/share/grafana/conf/provisioning/datasources/FLUFFIdata.yaml
             - ./data/mon/FLUFFIdash.yaml:/usr/share/grafana/conf/provisioning/dashboards/FLUFFIdash.yaml
             - ./data/mon/defaults.ini:/usr/share/grafana/conf/defaults.ini
-        dns: 10.66.0.1
+        dns: 250.154.202.36
     fluffiweb:
         build: ./fluffiweb
         restart: always
@@ -111,7 +111,7 @@ services:
             - ./data/fluffiweb:/app
         ports:
             - 8880:80/tcp
-        dns: 10.66.0.1
+        dns: 250.154.202.36
     dashsync:
         build: ./dashsync
         restart: always
@@ -120,7 +120,7 @@ services:
             - ./data/dashsync:/app
         ports:
             - 4000:4000
-        dns: 10.66.0.1
+        dns: 250.154.202.36
     fluffigm:
         build: ./fluffigm
         restart: always
@@ -130,7 +130,7 @@ services:
         ports: 
             - 6669:6669
         stdin_open: true
-        dns: 10.66.0.1
+        dns: 250.154.202.36
     grasync:
         build: ./grasync
         image: grasync:latest
@@ -138,7 +138,7 @@ services:
         volumes:
             - /etc/localtime:/etc/localtime:ro
             - ./data/grasync:/app
-        dns: 10.66.0.1
+        dns: 250.154.202.36
     polenext:
         build: ./polenext
         restart: always
@@ -167,7 +167,7 @@ services:
             - ./data/polenext/requests:/requests
         ports:
             - 8888:8080
-        dns: 10.66.0.1
+        dns: 250.154.202.36
     mariadb:
         build: ./mariadb
         restart: always
@@ -178,4 +178,3 @@ services:
             - ./data/fluffiweb/app/sql_files/createGMDB.sql:/docker-entrypoint-initdb.d/createGMDB.sql
             - ./data/mariadb/grantAllPrivs.sql:/docker-entrypoint-initdb.d/grantAllPrivs.sql
             - ./data/mariadb/fluffi.cnf:/etc/mysql/conf.d/fluffi.cnf
-
