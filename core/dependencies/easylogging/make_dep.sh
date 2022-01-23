@@ -39,7 +39,7 @@ cd easyloggingpp
 git checkout 5181b4039c04697aac7eac0bde44352cd8901567
 
 # Writing our config
-sed -i '1s;^;#define ELPP_NO_DEFAULT_LOG_FILE\n//#define ELPP_DISABLE_INFO_LOGS\n//#define ELPP_NO_LOG_TO_FILE\n#define ELPP_THREAD_SAFE\n#if !defined(_DEBUG) \&\& !defined(DEBUG)\n#define ELPP_DISABLE_DEBUG_LOGS\n#endif\n;' src/easylogging++.h
+sed -i '1s;^;#define ELPP_NO_DEFAULT_LOG_FILE\n//#define ELPP_DISABLE_INFO_LOGS\n//#define ELPP_NO_LOG_TO_FILE\n#define ELPP_THREAD_SAFE\n#if !defined(_DEBUG) \&\& !defined(DEBUG)\n#define ELPP_DISABLE_DEBUG_LOGS\n#endif\n#define ELPP_DISABLE_LOGS\n#define ELPP_NO_LOG_TO_FILE\n;' src/easylogging++.h
 
 # Building easylogging lib
 
