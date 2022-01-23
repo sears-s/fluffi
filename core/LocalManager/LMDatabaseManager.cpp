@@ -719,7 +719,7 @@ GetTestcaseToMutateResponse* LMDatabaseManager::generateGetTestcaseToMutateRespo
 
 	//#################### First part: get testcase ####################
 	{
-		if (mysql_query(getDBConnection(), "SELECT ID, CreatorServiceDescriptorGUID, CreatorLocalID, RawBytes  FROM interesting_testcases WHERE TestCaseType = 0 ORDER BY Rating DESC LIMIT 1") != 0) {
+		if (mysql_query(getDBConnection(), "SELECT ID, CreatorServiceDescriptorGUID, CreatorLocalID, RawBytes  FROM interesting_testcases WHERE TestCaseType = 0 ORDER BY TimeLastChosen ASC LIMIT 1") != 0) {
 			LOG(ERROR) << "LMDatabaseManager::generateGetTestcaseToMutateResponse could not get a testcase from the database";
 			return response;
 		}
@@ -828,6 +828,31 @@ GetTestcaseToMutateResponse* LMDatabaseManager::generateGetTestcaseToMutateRespo
 		}
 
 		mysql_stmt_free_result(sql_stmt);
+		mysql_stmt_close(sql_stmt);
+	}
+
+	// Update timestamp for when testcase was last chosen
+	{
+		// Prepared statement
+		MYSQL_STMT* sql_stmt = mysql_stmt_init(getDBConnection());
+		const char* stmt = "UPDATE interesting_testcases SET TimeLastChosen = CURRENT_TIMESTAMP() WHERE ID = ?";
+		mysql_stmt_prepare(sql_stmt, stmt, static_cast<unsigned long>(strlen(stmt)));
+
+		// Param
+		MYSQL_BIND bind[1];
+		memset(bind, 0, sizeof(bind));
+		bind[0].buffer_type = MYSQL_TYPE_LONGLONG;
+		bind[0].buffer = &testcaseID;
+		bind[0].is_null = 0;
+		bind[0].is_unsigned = true;
+		bind[0].length = NULL;
+
+		// Run query
+		mysql_stmt_bind_param(sql_stmt, bind);
+		bool re = mysql_stmt_execute(sql_stmt) == 0;
+		if (!re) {
+			LOG(ERROR) << "generateGetTestcaseToMutateResponse encountered the following error (2): " << mysql_stmt_error(sql_stmt);
+		}
 		mysql_stmt_close(sql_stmt);
 	}
 
@@ -1032,7 +1057,7 @@ bool LMDatabaseManager::addEntryToInterestingTestcasesTable(const FluffiTestcase
 	{
 		MYSQL_STMT* sql_stmt = mysql_stmt_init(getDBConnection());
 
-		const char* stmt = "INSERT INTO interesting_testcases (CreatorServiceDescriptorGUID, CreatorLocalID, ParentServiceDescriptorGUID, ParentLocalID, Rating, RawBytes, TestCaseType, TimeOfInsertion) values (?, ?, ?, ?, ?, ?, ?,CURRENT_TIMESTAMP())";
+		const char* stmt = "INSERT INTO interesting_testcases (CreatorServiceDescriptorGUID, CreatorLocalID, ParentServiceDescriptorGUID, ParentLocalID, Rating, RawBytes, TestCaseType, TimeOfInsertion, TimeLastChosen) values (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP())";
 		mysql_stmt_prepare(sql_stmt, stmt, static_cast<unsigned long>(strlen(stmt)));
 
 		//params
