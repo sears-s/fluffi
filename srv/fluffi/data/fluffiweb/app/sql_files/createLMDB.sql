@@ -61,6 +61,7 @@ CREATE TABLE IF NOT EXISTS fluffi.interesting_testcases (
 	`RawBytes` LONGBLOB NOT NULL,
 	`TestCaseType` INT(1) NOT NULL,
 	`TimeOfInsertion` TIMESTAMP NULL DEFAULT NULL,
+	`TimeLastChosen` TIMESTAMP NOT NULL,
 	UNIQUE (`CreatorServiceDescriptorGUID`, `CreatorLocalID`),
 	PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8; 
@@ -240,5 +241,3 @@ CREATE EVENT IF NOT EXISTS fluffi.CallPopulationMinimization
 	ON COMPLETION NOT PRESERVE
 	ENABLE
 	DO CALL fluffi.populationMinimization();
-
-
