@@ -48,7 +48,7 @@ REM Getting dynamorio from git
 
 git clone https://github.com/DynamoRIO/dynamorio.git
 cd dynamorio
-git checkout 1ddc1a79579c6efce1baa264de600654d00f6bda
+git checkout 8e585ba301f87742c531899e9206638a7880b38f
 
 REM Copy files for the drcovMulti module
 MKDIR clients\drcovMulti
