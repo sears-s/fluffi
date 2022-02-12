@@ -131,7 +131,7 @@ $(ARCH)/lib/libsharedcode.so: $(SHOBJS) $(SHLIBOBJS) $(ARCH)/buildtmp/shobj/FLUF
 
 $(ARCH)/buildtmp/runobj/%.o: $(FLUFFIPATH)/TestcaseRunner/%.cpp
 	@echo -e "[\033[94mcompiling\033[0m] "$(notdir $<)"..."
-	@$(CC) $(AFLAGS) $(CFLAGS) -D DR_DO_NOT_DEFINE_MAX_MIN -D_DR_BUILD_CONFIGURE_=\<build$(ARCH)/configure.h\> -D_DR_BUILD_CONFIG_=\<build$(ARCH)/include/dr_config.h\> $(RUNINCLUDE) -o $@ $<
+	@$(CC) $(AFLAGS) $(CFLAGS) -D DYNAMORIO_INTERNAL -D DR_DO_NOT_DEFINE_MAX_MIN -D_DR_BUILD_CONFIGURE_=\<build$(ARCH)/configure.h\> -D_DR_BUILD_CONFIG_=\<build$(ARCH)/include/dr_config.h\> $(RUNINCLUDE) -o $@ $<
 
 $(ARCH)/buildtmp/genobj/%.o: $(FLUFFIPATH)/TestcaseGenerator/%.cpp
 	@echo -e "[\033[94mcompiling\033[0m] "$(notdir $<)"..."
@@ -202,4 +202,3 @@ re:
 	@$(MAKE) --no-print-directory clean
 	@$(MAKE) --no-print-directory deps
 	@$(MAKE) --no-print-directory all
-
