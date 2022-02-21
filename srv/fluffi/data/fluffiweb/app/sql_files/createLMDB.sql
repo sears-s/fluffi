@@ -63,6 +63,7 @@ CREATE TABLE IF NOT EXISTS fluffi.interesting_testcases (
 	`TimeOfInsertion` TIMESTAMP NULL DEFAULT NULL,
 	`TimeLastChosen` TIMESTAMP NOT NULL,
 	`EdgeCoverageHash` CHAR(16) NULL DEFAULT NULL,
+	`ChosenCounter` BIGINT NOT NULL DEFAULT 0,
 	UNIQUE (`CreatorServiceDescriptorGUID`, `CreatorLocalID`),
 	PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8; 
