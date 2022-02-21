@@ -719,7 +719,7 @@ GetTestcaseToMutateResponse* LMDatabaseManager::generateGetTestcaseToMutateRespo
 
 	//#################### First part: get testcase ####################
 	{
-		if (mysql_query(getDBConnection(), "SELECT ID, CreatorServiceDescriptorGUID, CreatorLocalID, RawBytes  FROM interesting_testcases WHERE TestCaseType = 0 ORDER BY Rating DESC LIMIT 1") != 0) {
+		if (mysql_query(getDBConnection(), "SELECT ID, CreatorServiceDescriptorGUID, CreatorLocalID, RawBytes, Rating, ChosenCounter, IFNULL(Counter, 1) FROM interesting_testcases LEFT JOIN edge_coverage ON EdgeCoverageHash = Hash WHERE TestCaseType = 0 ORDER BY Rating DESC LIMIT 1") != 0) {
 			LOG(ERROR) << "LMDatabaseManager::generateGetTestcaseToMutateResponse could not get a testcase from the database";
 			return response;
 		}
@@ -746,6 +746,9 @@ GetTestcaseToMutateResponse* LMDatabaseManager::generateGetTestcaseToMutateRespo
 		long long int creatorLocalID = _strtoui64(row[2], NULL, 10);
 		std::string* rawBytesFirstChunk = new std::string(row[3], min(lengths[3], static_cast<unsigned int>(CommInt::chunkSizeInBytes)));
 		bool isOnlyOneChunk = lengths[3] <= static_cast<unsigned long>(CommInt::chunkSizeInBytes);
+		int rating = _strtoui64(row[4], NULL, 10);
+		long long int chosenCounter = _strtoui64(row[5], NULL, 10);
+		long long int pathCounter = _strtoui64(row[6], NULL, 10);
 
 		if (!isOnlyOneChunk) {
 			std::string* rawBytes = new std::string(row[3], lengths[3]);
@@ -777,6 +780,9 @@ GetTestcaseToMutateResponse* LMDatabaseManager::generateGetTestcaseToMutateRespo
 		response->set_allocated_id(tcID);
 		response->set_allocated_testcasefirstchunk(rawBytesFirstChunk);
 		response->set_islastchunk(isOnlyOneChunk);
+		response->set_rating(rating);
+		response->set_chosencounter(chosenCounter);
+		response->set_pathcounter(pathCounter);
 
 		mysql_free_result(result);
 	}
@@ -828,6 +834,31 @@ GetTestcaseToMutateResponse* LMDatabaseManager::generateGetTestcaseToMutateRespo
 		}
 
 		mysql_stmt_free_result(sql_stmt);
+		mysql_stmt_close(sql_stmt);
+	}
+
+	// Increment ChosenCounter for chosen testcase
+	{
+		// Prepared statement
+		MYSQL_STMT* sql_stmt = mysql_stmt_init(getDBConnection());
+		const char* stmt = "UPDATE interesting_testcases SET ChosenCounter = ChosenCounter + 1 WHERE ID = ?";
+		mysql_stmt_prepare(sql_stmt, stmt, static_cast<unsigned long>(strlen(stmt)));
+
+		// Param
+		MYSQL_BIND bind[1];
+		memset(bind, 0, sizeof(bind));
+		bind[0].buffer_type = MYSQL_TYPE_LONGLONG;
+		bind[0].buffer = &testcaseID;
+		bind[0].is_null = 0;
+		bind[0].is_unsigned = true;
+		bind[0].length = NULL;
+
+		// Run query
+		mysql_stmt_bind_param(sql_stmt, bind);
+		bool re = mysql_stmt_execute(sql_stmt) == 0;
+		if (!re) {
+			LOG(ERROR) << "generateGetTestcaseToMutateResponse encountered the following error (2): " << mysql_stmt_error(sql_stmt);
+		}
 		mysql_stmt_close(sql_stmt);
 	}
 
@@ -1039,12 +1070,12 @@ bool LMDatabaseManager::addEntryToInterestingTestcasesTable(const FluffiTestcase
 		if (edgeCoverageHash.empty())
 		{
 			bind_len = 7;
-			stmt = "INSERT INTO interesting_testcases (CreatorServiceDescriptorGUID, CreatorLocalID, ParentServiceDescriptorGUID, ParentLocalID, Rating, RawBytes, TestCaseType, TimeOfInsertion) values (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP())";
+			stmt = "INSERT INTO interesting_testcases (CreatorServiceDescriptorGUID, CreatorLocalID, ParentServiceDescriptorGUID, ParentLocalID, Rating, RawBytes, TestCaseType, TimeOfInsertion, ChosenCounter) values (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP(), 0)";
 		}
 		else
 		{
 			bind_len = 8;
-			stmt = "INSERT INTO interesting_testcases (CreatorServiceDescriptorGUID, CreatorLocalID, ParentServiceDescriptorGUID, ParentLocalID, Rating, RawBytes, TestCaseType, TimeOfInsertion, EdgeCoverageHash) values (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP(), ?)";
+			stmt = "INSERT INTO interesting_testcases (CreatorServiceDescriptorGUID, CreatorLocalID, ParentServiceDescriptorGUID, ParentLocalID, Rating, RawBytes, TestCaseType, TimeOfInsertion, EdgeCoverageHash, ChosenCounter) values (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP(), ?, 0)";
 		}
 		mysql_stmt_prepare(sql_stmt, stmt, static_cast<unsigned long>(strlen(stmt)));
 
