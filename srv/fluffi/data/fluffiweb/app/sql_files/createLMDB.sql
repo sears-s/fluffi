@@ -62,9 +62,16 @@ CREATE TABLE IF NOT EXISTS fluffi.interesting_testcases (
 	`TestCaseType` INT(1) NOT NULL,
 	`TimeOfInsertion` TIMESTAMP NULL DEFAULT NULL,
 	`TimeLastChosen` TIMESTAMP NOT NULL,
+	`EdgeCoverageHash` CHAR(16) NULL DEFAULT NULL,
 	UNIQUE (`CreatorServiceDescriptorGUID`, `CreatorLocalID`),
 	PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8; 
+
+CREATE TABLE IF NOT EXISTS fluffi.edge_coverage (
+	`Hash` CHAR(16) NOT NULL,
+	`Counter` BIGINT NOT NULL,
+	PRIMARY KEY (`Hash`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS fluffi.completed_testcases (
 	`ID` BIGINT NOT NULL AUTO_INCREMENT,
