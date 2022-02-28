@@ -54,9 +54,9 @@ private:
 	size_t m_desiredQueueFillLevel;
 	std::string m_queueFillerTempDir;
 	TGTestcaseManager* m_testcaseManager;
-	unsigned int m_minBulkGenerationSize = 5;
-	unsigned int m_maxBulkGenerationSize = 200;
-	unsigned int m_powerScheduleConstant = 1000;
+	unsigned int m_minBulkGenerationSize = 50;
+	unsigned int m_maxBulkGenerationSize = 500;
+	unsigned int m_powerScheduleConstant = 50;
 	FluffiServiceDescriptor m_mySelfServiceDescriptor;
 	TGWorkerThreadState* m_workerThreadState;
 	GarbageCollectorWorker* m_garbageCollectorWorker;
