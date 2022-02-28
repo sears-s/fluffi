@@ -41,15 +41,13 @@ Author(s): Thomas Riedmaier, Abian Blome, Roman Bendt
 #include "FluffiMutator.h"
 #include "AFLMutator.h"
 
-QueueFillerWorker::QueueFillerWorker(CommInt* commInt, TGWorkerThreadStateBuilder* workerThreadStateBuilder, int delayToWaitUntilConfigIsCompleteInMS, size_t desiredQueueFillLevel, std::string testcaseDirectory, std::string queueFillerTempDir, TGTestcaseManager* testcaseManager, std::set<std::string> myAgentSubTypes, GarbageCollectorWorker* garbageCollectorWorker, unsigned int maxBulkGenerationSize, unsigned int powerScheduleConstant) :
+QueueFillerWorker::QueueFillerWorker(CommInt* commInt, TGWorkerThreadStateBuilder* workerThreadStateBuilder, int delayToWaitUntilConfigIsCompleteInMS, size_t desiredQueueFillLevel, std::string testcaseDirectory, std::string queueFillerTempDir, TGTestcaseManager* testcaseManager, std::set<std::string> myAgentSubTypes, GarbageCollectorWorker* garbageCollectorWorker) :
 	m_gotConfigFromLM(false),
 	m_commInt(commInt),
 	m_workerThreadStateBuilder(workerThreadStateBuilder),
 	m_desiredQueueFillLevel(desiredQueueFillLevel),
 	m_queueFillerTempDir(queueFillerTempDir),
 	m_testcaseManager(testcaseManager),
-	m_maxBulkGenerationSize(maxBulkGenerationSize),
-	m_powerScheduleConstant(powerScheduleConstant),
 	m_mySelfServiceDescriptor(commInt->getOwnServiceDescriptor()),
 	m_workerThreadState(nullptr),
 	m_garbageCollectorWorker(garbageCollectorWorker),
@@ -102,7 +100,7 @@ void QueueFillerWorker::workerMain() {
 		}
 
 		FluffiTestcaseID parentID{ FluffiServiceDescriptor{"",""},0 };
-		int rating = 0;
+		long long int rating = 0;
 		long long int chosenCounter = 0;
 		long long int pathCounter = 0;
 		try
@@ -117,11 +115,24 @@ void QueueFillerWorker::workerMain() {
 		}
 
 		// FAST power schedule
-		unsigned long long int energy = rating * (static_cast<unsigned long long int>(1) << chosenCounter)
-										/ (m_powerScheduleConstant * (pathCounter == 0 ? 1 : pathCounter));
-		if (energy > m_maxBulkGenerationSize) {
+		unsigned long long int energy = 0;
+		if (chosenCounter > 62) // prevent overflow
+		{
 			energy = m_maxBulkGenerationSize;
 		}
+		else
+		{
+			energy = rating * (static_cast<unsigned long long int>(1) << chosenCounter) / (m_powerScheduleConstant * (pathCounter == 0 ? 1 : pathCounter));
+			if (energy > m_maxBulkGenerationSize)
+			{
+				energy = m_maxBulkGenerationSize;
+			}
+			else if (energy < m_minBulkGenerationSize)
+			{
+				energy = m_minBulkGenerationSize;
+			}
+		}
+		LOG(INFO) << "POWER SCHEDULE - chosen: " << std::to_string(chosenCounter) << " paths: " << std::to_string(pathCounter) << " rating: " << std::to_string(rating) << " energy: " << std::to_string(energy);
 
 		//from this point on there is a parent testcase file that we have to take care of!
 		std::string parentPathAndFileName = Util::generateTestcasePathAndFilename(parentID, m_queueFillerTempDir);
@@ -157,7 +168,7 @@ void QueueFillerWorker::workerMain() {
 	m_workerThreadStateBuilder->destructState(m_workerThreadState);
 }
 
-std::tuple<FluffiTestcaseID, int, long long int, long long int> QueueFillerWorker::getNewParent()
+std::tuple<FluffiTestcaseID, long long int, long long int, long long int> QueueFillerWorker::getNewParent()
 {
 	FLUFFIMessage req;
 	GetTestcaseToMutateRequest* getTestcaseToMutateRequest = new GetTestcaseToMutateRequest();

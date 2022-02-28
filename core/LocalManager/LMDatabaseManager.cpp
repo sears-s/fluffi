@@ -746,7 +746,7 @@ GetTestcaseToMutateResponse* LMDatabaseManager::generateGetTestcaseToMutateRespo
 		long long int creatorLocalID = _strtoui64(row[2], NULL, 10);
 		std::string* rawBytesFirstChunk = new std::string(row[3], min(lengths[3], static_cast<unsigned int>(CommInt::chunkSizeInBytes)));
 		bool isOnlyOneChunk = lengths[3] <= static_cast<unsigned long>(CommInt::chunkSizeInBytes);
-		int rating = _strtoui64(row[4], NULL, 10);
+		long long int rating = _strtoui64(row[4], NULL, 10);
 		long long int chosenCounter = _strtoui64(row[5], NULL, 10);
 		long long int pathCounter = _strtoui64(row[6], NULL, 10);
 
