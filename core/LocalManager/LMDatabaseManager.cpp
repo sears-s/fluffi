@@ -719,7 +719,7 @@ GetTestcaseToMutateResponse* LMDatabaseManager::generateGetTestcaseToMutateRespo
 
 	//#################### First part: get testcase ####################
 	{
-		if (mysql_query(getDBConnection(), "SELECT ID, CreatorServiceDescriptorGUID, CreatorLocalID, RawBytes  FROM interesting_testcases WHERE TestCaseType = 0 ORDER BY Rating DESC LIMIT 1") != 0) {
+		if (mysql_query(getDBConnection(), "SELECT ID, CreatorServiceDescriptorGUID, CreatorLocalID, RawBytes  FROM interesting_testcases WHERE TestCaseType = 0 ORDER BY ChosenCounter ASC, IFNULL(Counter, 1) ASC, Rating DESC LIMIT 1") != 0) {
 			LOG(ERROR) << "LMDatabaseManager::generateGetTestcaseToMutateResponse could not get a testcase from the database";
 			return response;
 		}
